@@ -9,6 +9,7 @@ import 'package:cool_stepper/src/models/cool_step.dart';
 import 'package:cool_stepper/src/models/cool_stepper_config.dart';
 import 'package:cool_stepper/src/widgets/cool_stepper_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// CoolStepper
 class CoolStepper extends StatefulWidget {
@@ -160,23 +161,24 @@ class _CoolStepperState extends State<CoolStepper> {
 
     String getPrevLabel() {
       String backLabel;
-      if (_isFirst(currentStep)) {
-        backLabel = '';
+      if (widget.config.backTextList != null) {
+        backLabel = widget.config.backTextList![currentStep - 1];
       } else {
-        if (widget.config.backTextList != null) {
-          backLabel = widget.config.backTextList![currentStep - 1];
-        } else {
-          backLabel = widget.config.backText ?? 'PREV';
-        }
+        backLabel = widget.config.backText ?? 'PREV';
       }
       return backLabel;
     }
 
     final buttons = Container(
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      padding: EdgeInsets.only(right: 30, left: 30, top: 15, bottom: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: Colors.white, side: BorderSide(color: Colors.grey)),
             onPressed: onStepBack,
             child: Text(
               getPrevLabel(),
@@ -184,12 +186,16 @@ class _CoolStepperState extends State<CoolStepper> {
             ),
           ),
           counter,
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0XFF7BBBBA),
+              onSurface: Colors.grey,
+            ),
             onPressed: onStepNext,
             child: Text(
               getNextLabel(),
               style: TextStyle(
-                color: Colors.green,
+                color: Colors.white,
               ),
             ),
           ),
@@ -197,9 +203,24 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
+    final help = Container(
+      alignment: Alignment.bottomRight,
+      height: 100,
+      child: IconButton(
+        iconSize: 90,
+        onPressed: null,
+        icon: Image.asset(
+          'assets/images/help.png',
+          height: 90,
+          width: 90,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+
     return Container(
       child: Column(
-        children: [content, buttons],
+        children: [content, help, buttons],
       ),
     );
   }
